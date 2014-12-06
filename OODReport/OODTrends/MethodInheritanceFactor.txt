@@ -1,0 +1,6 @@
+<Query Active="True" DisplayList="True" DisplayStat="True" DisplaySelectionView="False" IsCriticalRule="False"><![CDATA[// <TrendMetric Name="Method Inheritance Factor" Unit="%" />
+((float)Application.Methods.Where(m => m.ParentType.NbChildren > 0 && !(m.IsPrivate) && m.OverridesDerived.Count() < 1).Count() /
+        Application.Methods.Count()
+*100f)
+.ToEnumerable().Sum()
+]]></Query>

@@ -1,0 +1,13 @@
+<Query Active="True" DisplayList="True" DisplayStat="True" DisplaySelectionView="False" IsCriticalRule="False"><![CDATA[// <Name>Packages in "Zone of Pain"</Name>
+warnif count > 0
+from p in Application.Packages
+let packagesUsed = (float) p.NbPackagesUsed
+let packagesUsingMe = (float) p.NbPackagesUsingMe
+where (packagesUsed > 0 || packagesUsingMe > 0)
+let instability = (packagesUsed 
+/ (packagesUsingMe + packagesUsed ))
+let abstractness = ((float) p.ChildTypes
+.Where(t => t.IsAbstract || t.IsInterface).Count() / (float)p.NbTypes)
+let distance = (abstractness + instability - 1)
+where (distance < -0.2)
+select new { p, abstractness, instability, distance }]]></Query>

@@ -1,0 +1,47 @@
+<Group Name="OOD Report" Active="True" ShownInReport="False"><Group Name="OOD Trends" Active="True" ShownInReport="False"><Query Active="True" DisplayList="True" DisplayStat="True" DisplaySelectionView="False" IsCriticalRule="False"><![CDATA[// <TrendMetric Name="Attribute Hiding Factor" Unit="%" />
+((float)Application.Fields.Where(f => !f.IsMethod && (f.IsPrivate || f.IsProtected)).Count() /
+        Application.Fields.Where(f => !f.IsMethod).Count()
+*100f)
+.ToEnumerable().Sum()]]></Query><Query Active="True" DisplayList="True" DisplayStat="True" DisplaySelectionView="False" IsCriticalRule="False"><![CDATA[// <TrendMetric Name="Method Hiding Factor" Unit="%" />
+((float)Application.Methods.Where(m => m.IsPrivate || m.IsProtected).Count() /
+        Application.Methods.Count()
+*100f)
+.ToEnumerable().Sum()]]></Query><Query Active="True" DisplayList="True" DisplayStat="True" DisplaySelectionView="False" IsCriticalRule="False"><![CDATA[// <TrendMetric Name="Method Inheritance Factor" Unit="%" />
+((float)Application.Methods.Where(m => m.ParentType.NbChildren > 0 && !(m.IsPrivate) && m.OverridesDerived.Count() < 1).Count() /
+        Application.Methods.Count()
+*100f)
+.ToEnumerable().Sum()
+]]></Query><Query Active="True" DisplayList="True" DisplayStat="True" DisplaySelectionView="False" IsCriticalRule="False"><![CDATA[// <TrendMetric Name="Polymorphism Factor" Unit="%"/>
+((float)Application.Types.Sum(t => t.Methods.Where(m => m.OverriddensBase.Count() > 0).Count()) /
+        Application.Types.Where(t => t.NbChildren > 0).Sum(t => t.Methods.Where(m => m.OverriddensBase.Count() < 1).Count() * t.NbChildren)
+*100f)
+.ToEnumerable().Sum()]]></Query></Group><Group Name="Cohesion/Coupling Queries" Active="True" ShownInReport="False"><Query Active="True" DisplayList="True" DisplayStat="True" DisplaySelectionView="False" IsCriticalRule="False"><![CDATA[// <Name>Packages in "Zone of Pain"</Name>
+warnif count > 0
+from p in Application.Packages
+let packagesUsed = (float) p.NbPackagesUsed
+let packagesUsingMe = (float) p.NbPackagesUsingMe
+where (packagesUsed > 0 || packagesUsingMe > 0)
+let instability = (packagesUsed 
+/ (packagesUsingMe + packagesUsed ))
+let abstractness = ((float) p.ChildTypes
+.Where(t => t.IsAbstract || t.IsInterface).Count() / (float)p.NbTypes)
+let distance = (abstractness + instability - 1)
+where (distance < -0.2)
+select new { p, abstractness, instability, distance }]]></Query><Query Active="True" DisplayList="True" DisplayStat="True" DisplaySelectionView="False" IsCriticalRule="False"><![CDATA[// <Name>Packages in "Zone of Uselessness"</Name>
+warnif count > 0
+from p in Application.Packages
+let packagesUsed = (float) p.NbPackagesUsed
+let packagesUsingMe = (float) p.NbPackagesUsingMe
+where (packagesUsed > 0 || packagesUsingMe > 0)
+let instability = (packagesUsed 
+/ (packagesUsingMe + packagesUsed ))
+let abstractness = ((float) p.ChildTypes
+.Where(t => t.IsAbstract || t.IsInterface).Count() / p.NbTypes)
+let distance = (abstractness + instability - 1)
+where (distance > 0.2)
+select new { p, abstractness, instability, distance }]]></Query><Query Active="True" DisplayList="True" DisplayStat="True" DisplaySelectionView="False" IsCriticalRule="False"><![CDATA[// <TrendMetric Name="Coupling Factor" Unit="%" />
+((float) Application.Types.Sum(t => t.NbTypesUsed) 
+/ ((Application.Types.Count()
+* Application.Types.Count())
+- Application.Types.Count())
+* 100f).ToEnumerable().Sum()]]></Query></Group></Group>

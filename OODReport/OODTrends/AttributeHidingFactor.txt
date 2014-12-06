@@ -1,0 +1,5 @@
+<Query Active="True" DisplayList="True" DisplayStat="True" DisplaySelectionView="False" IsCriticalRule="False"><![CDATA[// <TrendMetric Name="Attribute Hiding Factor" Unit="%" />
+((float)Application.Fields.Where(f => !f.IsMethod && (f.IsPrivate || f.IsProtected)).Count() /
+        Application.Fields.Where(f => !f.IsMethod).Count()
+*100f)
+.ToEnumerable().Sum()]]></Query>

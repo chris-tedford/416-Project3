@@ -1,0 +1,5 @@
+<Query Active="True" DisplayList="True" DisplayStat="True" DisplaySelectionView="False" IsCriticalRule="False"><![CDATA[// <TrendMetric Name="Polymorphism Factor" Unit="%"/>
+((float)Application.Types.Sum(t => t.Methods.Where(m => m.OverriddensBase.Count() > 0).Count()) /
+        Application.Types.Where(t => t.NbChildren > 0).Sum(t => t.Methods.Where(m => m.OverriddensBase.Count() < 1).Count() * t.NbChildren)
+*100f)
+.ToEnumerable().Sum()]]></Query>

@@ -1,0 +1,6 @@
+<Query Active="True" DisplayList="True" DisplayStat="True" DisplaySelectionView="False" IsCriticalRule="False"><![CDATA[// <TrendMetric Name="Coupling Factor" Unit="%" />
+((float) Application.Types.Sum(t => t.NbTypesUsed) 
+/ ((Application.Types.Count()
+* Application.Types.Count())
+- Application.Types.Count())
+* 100f).ToEnumerable().Sum()]]></Query>

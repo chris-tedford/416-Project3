@@ -1,0 +1,9 @@
+The folder structure in "OODReport" is exactly how the queries are grouped and organized when you import the contents of "OOD_Report_Query_Group."
+Each query file can be imported individually or you can import the entire group all at once. 
+
+To import a query or group into JArchitect, do the following:
+	Open up a project with source files and perform JArchitect's analysis (this does all of the indexing and computations needed for the queries to work).
+	Open up the query or group file you want to import in some text editor
+	Copy the entire contents of the file into your clipboard (or Mac/Linux equivalent)
+	In the "Queries and Rules Explorers" pane, right click anywhere and select paste {"QUERY-OR-GROUP-NAME"}
+	The queries should show up along with the results instantaneously
